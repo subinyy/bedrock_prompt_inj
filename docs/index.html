@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prompt Injection Scenario</title>
+</head>
+<body>
+  <h1>💣 Bedrock Prompt Injection 시나리오</h1>
+  <p>질문을 입력하고 시도해보세요:</p>
+
+  <textarea id="userInput" rows="6" cols="60" placeholder="Ask something to Bedrock..."></textarea>
+  <br>
+  <button onclick="sendRequest()">Send to Agent</button>
+
+  <h3>🔐 응답 결과:</h3>
+  <pre id="responseBox">[여기에 결과가 표시됩니다]</pre>
+
+  <script>
+    async function sendRequest() {
+      const prompt = document.getElementById("userInput").value;
+      const apiUrl = new URLSearchParams(window.location.search).get("api");
+      if (!apiUrl) {
+        alert("API Gateway 주소가 URL에 포함되어야 합니다. 예: ?api=https://xxxxx.amazonaws.com/ask");
+        return;
+      }
+
+      const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      const text = await res.text();
+      document.getElementById("responseBox").textContent = text;
+    }
+  </script>
+</body>
+</html>
